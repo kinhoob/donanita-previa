@@ -207,7 +207,7 @@ export function App() {
   <div className="units-wrap dn-reveal d2">
     <div className="units">
       {UNITS.map((x, i) => (
-        <button key={x.id} type="button" className={'unit' + (i === unit ? ' active' : '')} onClick={() => setUnit(i)} aria-pressed={i === unit}>
+        <button key={x.id} type="button" className={'unit' + (i === unit ? ' active' : '')} onClick={() => { setUnit(i); if (window.innerWidth <= 820) setTimeout(() => document.querySelector('.map-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60); }} aria-pressed={i === unit}>
           <span className="unit-pin" data-l={x.letter}></span>
           <span className="unit-body">
             <span className="unit-tag">Unidade</span>
