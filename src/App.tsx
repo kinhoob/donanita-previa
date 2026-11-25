@@ -1,7 +1,41 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { avatar, p1, p2, p5, p6, p7, p8, p10, p11, p12 } from './photos';
 
+const UNITS = [
+  { id: 'madalena', letter: 'A', name: 'Madalena', line1: 'R. José Bonifácio, 380 — Sala 101 (1º andar)', line2: 'Madalena, Recife — PE · CEP 50710-435', lat: -8.0475947, lon: -34.9063076, link: 'https://maps.app.goo.gl/7KDkghWg8v56bzFY9' },
+  { id: 'boaviagem', letter: 'B', name: 'Boa Viagem', line1: 'R. Mamanguape, 216', line2: 'Boa Viagem, Recife — PE · CEP 51020-240', lat: -8.1155535, lon: -34.897736, link: 'https://maps.app.goo.gl/GaEM3ii2XMLCKkdB8' },
+  { id: 'espinheiro', letter: 'C', name: 'Espinheiro', line1: 'Galeria Mário Melo, R. da Hora, 456', line2: 'Espinheiro, Recife — PE · CEP 50050-290', lat: -8.0450824, lon: -34.8939035, link: 'https://maps.app.goo.gl/5S7pNBshmEKYK61A9' },
+];
+
+const TITLE = 'Dona Nita'.split('');
+
 export function App() {
+    const [unit, setUnit] = useState(0);
+    const u = UNITS[unit];
+    useEffect(() => {
+        const HOST = '.svc-card, .info-card, .unit, .gallery figure, .bf-inner, .rating, .map-panel, .section, .hero';
+        const onTap = (ev: PointerEvent) => {
+            const t = ev.target as HTMLElement;
+            if (t.closest('a, summary, button, iframe, .nav')) return;
+            const host = t.closest(HOST) as HTMLElement | null;
+            if (!host) return;
+            const r = host.getBoundingClientRect();
+            const rip = document.createElement('span');
+            rip.className = 'tap-ripple';
+            const size = Math.max(r.width, r.height) * 1.1;
+            rip.style.cssText = `width:${size}px;height:${size}px;left:${ev.clientX - r.left - size / 2}px;top:${ev.clientY - r.top - size / 2}px`;
+            host.appendChild(rip);
+            setTimeout(() => rip.remove(), 900);
+            const card = host.matches('.section, .hero') ? host.querySelector('h2, .hero-avatar') : host;
+            if (card) {
+                card.classList.remove('tap-pop');
+                void (card as HTMLElement).offsetWidth;
+                card.classList.add('tap-pop');
+            }
+        };
+        document.addEventListener('pointerdown', onTap);
+        return () => document.removeEventListener('pointerdown', onTap);
+    }, []);
     useEffect(() => {
         const els = document.querySelectorAll('.dn-reveal');
         const io = new IntersectionObserver((entries) => {
@@ -37,11 +71,11 @@ export function App() {
   <div className="hero-veil"></div>
   <div className="hero-inner">
     <img className="hero-avatar" src={avatar} alt="Dona Nita Esmalteria" />
-    <p className="hero-kicker reveal">ESMALTERIA • RECIFE</p>
-    <h1 className="dn-reveal d1">Dona Nita</h1>
-    <p className="hero-sub reveal d2">Especialistas em gel com naturalidade ✨</p>
-    <a className="btn btn-gold reveal d3" href="https://wa.me/message/KAWXL6243Q2IN1" target="_blank" rel="noopener">Agendar meu horário</a>
-    <p className="hero-note reveal d4">Atendimentos com hora marcada • Madalena · Boa Viagem · Espinheiro</p>
+    <p className="hero-kicker dn-dn-reveal">ESMALTERIA • RECIFE</p>
+    <h1 className="dn-dn-reveal d1">Dona Nita</h1>
+    <p className="hero-sub dn-reveal d2">Especialistas em gel com naturalidade ✨</p>
+    <a className="btn btn-gold dn-reveal d3" href="https://wa.me/message/KAWXL6243Q2IN1" target="_blank" rel="noopener">Agendar meu horário</a>
+    <p className="hero-note dn-reveal d4">Atendimentos com hora marcada • Madalena · Boa Viagem · Espinheiro</p>
   </div>
 </header>
 
@@ -53,21 +87,21 @@ export function App() {
 </div>
 
 <section className="section intro">
-  <p className="kicker reveal">Bem-vinda</p>
-  <h2 className="dn-reveal d1">Beleza em cada detalhe.</h2>
-  <p className="lead reveal d2">Três endereços em Recife, uma equipe apaixonada por unhas e um cuidado que se vê no acabamento. Escolha o serviço, chame no WhatsApp e pronto.</p>
-  <div className="rating reveal d3">
+  <p className="kicker dn-reveal">Bem-vinda</p>
+  <h2 className="dn-dn-reveal d1">Beleza em cada detalhe.</h2>
+  <p className="lead dn-reveal d2">Três endereços em Recife, uma equipe apaixonada por unhas e um cuidado que se vê no acabamento. Escolha o serviço, chame no WhatsApp e pronto.</p>
+  <div className="rating dn-reveal d3">
     <span className="stars">✦</span>
     <span><strong>21,5 mil</strong> seguidores no Instagram</span>
   </div>
 </section>
 
 <section className="section dark" id="servicos">
-  <p className="kicker reveal">Menu de serviços</p>
-  <h2 className="dn-reveal d1">Serviços & valores</h2>
+  <p className="kicker dn-reveal">Menu de serviços</p>
+  <h2 className="dn-dn-reveal d1">Serviços & valores</h2>
 
   <div className="svc-grid">
-    <article className="svc-card reveal">
+    <article className="svc-card dn-reveal">
       <h3>Tradicional</h3>
       <ul>
         <li><span>Manicure</span><b>R$ 30</b></li>
@@ -78,7 +112,7 @@ export function App() {
       </ul>
     </article>
 
-    <article className="svc-card reveal d1">
+    <article className="svc-card dn-reveal d1">
       <h3>Spa dos pés</h3>
       <ul>
         <li><span>Spa basiquinho <small>(inclui pedicure)</small></span><b>R$ 70</b></li>
@@ -87,7 +121,7 @@ export function App() {
       </ul>
     </article>
 
-    <article className="svc-card svc-hi reveal d2">
+    <article className="svc-card svc-hi dn-reveal d2">
       <h3>Colocação</h3>
       <ul>
         <li><span>Unhas de estreia <small>natural em gel ou fibra de vidro, com cutilagem cortesia</small></span><b>R$ 180</b></li>
@@ -96,7 +130,7 @@ export function App() {
       </ul>
     </article>
 
-    <article className="svc-card svc-hi reveal">
+    <article className="svc-card svc-hi dn-reveal">
       <h3>Manutenção</h3>
       <ul>
         <li><span>Renova Nita no tempo certo <small>até 20 dias, esmaltação em gel cortesia</small></span><b>R$ 120</b></li>
@@ -107,7 +141,7 @@ export function App() {
       </ul>
     </article>
 
-    <article className="svc-card reveal d1">
+    <article className="svc-card dn-reveal d1">
       <h3>Outros serviços</h3>
       <ul>
         <li><span>Esmaltação master <small>(inclui cutilagem)</small></span><b>R$ 110</b></li>
@@ -119,7 +153,7 @@ export function App() {
       </ul>
     </article>
 
-    <article className="svc-card reveal d2">
+    <article className="svc-card dn-reveal d2">
       <h3>Acabamentos</h3>
       <ul>
         <li><span>Alterar formato</span><b>R$ 30</b></li>
@@ -133,76 +167,90 @@ export function App() {
     </article>
   </div>
 
-  <p className="pay-note reveal">Aceitamos pix e todos os cartões · Parcelamento em 2x com acréscimo de 5% sobre o total</p>
+  <p className="pay-note dn-reveal">Aceitamos pix e todos os cartões · Parcelamento em 2x com acréscimo de 5% sobre o total</p>
 </section>
 
 <section className="section bf" id="blackfriday">
   <div className="bf-inner">
-    <p className="bf-tag reveal">BLACK FRIDAY</p>
-    <h2 className="dn-reveal d1">Pacote Esmaltação Master</h2>
-    <p className="bf-price reveal d2">R$ 550</p>
-    <p className="bf-desc reveal d2">6 esmaltações master — uma economia de <strong>R$ 110</strong></p>
-    <div className="bf-chips reveal d3">
+    <p className="bf-tag dn-reveal">BLACK FRIDAY</p>
+    <h2 className="dn-dn-reveal d1">Pacote Esmaltação Master</h2>
+    <p className="bf-price dn-reveal d2">R$ 550</p>
+    <p className="bf-desc dn-reveal d2">6 esmaltações master — uma economia de <strong>R$ 110</strong></p>
+    <div className="bf-chips dn-reveal d3">
       <span>2x sem juros</span>
       <span>Válido por 6 meses</span>
     </div>
-    <a className="btn btn-gold reveal d3" href="https://wa.me/message/KAWXL6243Q2IN1" target="_blank" rel="noopener">Quero aproveitar</a>
+    <a className="btn btn-gold dn-reveal d3" href="https://wa.me/message/KAWXL6243Q2IN1" target="_blank" rel="noopener">Quero aproveitar</a>
   </div>
 </section>
 
 <section className="section" id="galeria">
-  <p className="kicker reveal">Nosso trabalho</p>
-  <h2 className="dn-reveal d1">Direto do nosso Instagram</h2>
+  <p className="kicker dn-reveal">Nosso trabalho</p>
+  <h2 className="dn-dn-reveal d1">Direto do nosso Instagram</h2>
   <div className="gallery">
-    <figure className="dn-reveal"><img src={p5} alt="Alongamento em gel" loading="lazy" /></figure>
-    <figure className="dn-reveal d1"><img src={p8} alt="Esmaltação glazed" loading="lazy" /></figure>
-    <figure className="dn-reveal d2"><img src={p1} alt="Unhas vermelhas" loading="lazy" /></figure>
-    <figure className="dn-reveal"><img src={p12} alt="Atendimento" loading="lazy" /></figure>
-    <figure className="dn-reveal d1"><img src={p2} alt="Nosso espaço" loading="lazy" /></figure>
-    <figure className="dn-reveal d2"><img src={p10} alt="Spa dos pés" loading="lazy" /></figure>
-    <figure className="dn-reveal"><img src={p7} alt="Cuidado em cada etapa" loading="lazy" /></figure>
-    <figure className="dn-reveal d1"><img src={p11} alt="Nova coleção de esmaltes" loading="lazy" /></figure>
+    <figure className="dn-dn-reveal"><img src={p5} alt="Alongamento em gel" loading="lazy" /></figure>
+    <figure className="dn-dn-reveal d1"><img src={p8} alt="Esmaltação glazed" loading="lazy" /></figure>
+    <figure className="dn-dn-reveal d2"><img src={p1} alt="Unhas vermelhas" loading="lazy" /></figure>
+    <figure className="dn-dn-reveal"><img src={p12} alt="Atendimento" loading="lazy" /></figure>
+    <figure className="dn-dn-reveal d1"><img src={p2} alt="Nosso espaço" loading="lazy" /></figure>
+    <figure className="dn-dn-reveal d2"><img src={p10} alt="Spa dos pés" loading="lazy" /></figure>
+    <figure className="dn-dn-reveal"><img src={p7} alt="Cuidado em cada etapa" loading="lazy" /></figure>
+    <figure className="dn-dn-reveal d1"><img src={p11} alt="Nova coleção de esmaltes" loading="lazy" /></figure>
   </div>
-  <a className="text-link reveal" href="https://www.instagram.com/donanita_esmalteria/" target="_blank" rel="noopener">@donanita_esmalteria →</a>
+  <a className="text-link dn-reveal" href="https://www.instagram.com/donanita_esmalteria/" target="_blank" rel="noopener">@donanita_esmalteria →</a>
 </section>
 
 <section className="section dark" id="unidades">
-  <p className="kicker reveal">Onde estamos</p>
+  <p className="kicker dn-reveal">Onde estamos</p>
   <h2 className="dn-reveal d1">Três unidades em Recife</h2>
-  <div className="units">
-    <article className="unit reveal">
-      <h3>Madalena</h3>
-      <p>R. José Bonifácio, 380 — Sala 101 (1º andar)<br />Madalena, Recife — PE</p>
-      <a className="unit-link" href="https://www.google.com/maps/search/?api=1&query=Rua+Jos%C3%A9+Bonif%C3%A1cio+380+Madalena+Recife" target="_blank" rel="noopener">Como chegar →</a>
-    </article>
-    <article className="unit reveal d1">
-      <h3>Boa Viagem</h3>
-      <p>Boa Viagem, Recife — PE</p>
-      <a className="unit-link" href="https://www.google.com/maps/search/?api=1&query=Dona+Nita+Esmalteria+Boa+Viagem+Recife" target="_blank" rel="noopener">Como chegar →</a>
-    </article>
-    <article className="unit reveal d2">
-      <h3>Espinheiro</h3>
-      <p>Espinheiro, Recife — PE</p>
-      <a className="unit-link" href="https://www.google.com/maps/search/?api=1&query=Dona+Nita+Esmalteria+Espinheiro+Recife" target="_blank" rel="noopener">Como chegar →</a>
-    </article>
+  <p className="units-lead dn-reveal d2">Toque em uma unidade para ver no mapa.</p>
+  <div className="units-wrap dn-reveal d2">
+    <div className="units">
+      {UNITS.map((x, i) => (
+        <button key={x.id} type="button" className={'unit' + (i === unit ? ' active' : '')} onClick={() => setUnit(i)} aria-pressed={i === unit}>
+          <span className="unit-pin" data-l={x.letter}></span>
+          <span className="unit-body">
+            <span className="unit-tag">Unidade</span>
+            <strong>{x.name}</strong>
+            <span className="unit-addr">{x.line1}<br />{x.line2}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+    <div className="map-panel">
+      <div className="map-head">
+        <span className="map-badge">{u.letter}</span>
+        <div><b>Unidade {u.name}</b><small>{u.line1}</small></div>
+      </div>
+      <div className="map-frame">
+        <iframe
+          key={u.id}
+          title={'Mapa da unidade ' + u.name}
+          src={`https://maps.google.com/maps?q=${u.lat},${u.lon}&z=17&hl=pt-BR&output=embed`}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+      <a className="btn btn-gold map-open" href={u.link} target="_blank" rel="noopener">Abrir {u.name} no Google Maps</a>
+    </div>
   </div>
 </section>
 
 <section className="section info">
-  <p className="kicker reveal">Antes da sua visita</p>
-  <h2 className="dn-reveal d1">Bom saber</h2>
+  <p className="kicker dn-reveal">Antes da sua visita</p>
+  <h2 className="dn-dn-reveal d1">Bom saber</h2>
   <div className="info-grid">
-    <article className="info-card reveal">
+    <article className="info-card dn-reveal">
       <span className="info-num">01</span>
       <h3>Hora marcada</h3>
       <p>Os atendimentos são com agendamento. Chame no WhatsApp e escolha o melhor horário na unidade mais perto de você.</p>
     </article>
-    <article className="info-card reveal d1">
+    <article className="info-card dn-reveal d1">
       <span className="info-num">02</span>
       <h3>Pagamento facilitado</h3>
       <p>Aceitamos pix e todos os cartões. Parcelamento em 2x com acréscimo de 5% sobre o valor total.</p>
     </article>
-    <article className="info-card reveal d2">
+    <article className="info-card dn-reveal d2">
       <span className="info-num">03</span>
       <h3>Manutenção em dia</h3>
       <p>No Renova Nita dentro do prazo, a esmaltação em gel é cortesia. Passou de 30 dias? A reestreia cuida disso.</p>
@@ -211,13 +259,13 @@ export function App() {
 </section>
 
 <section className="section faq">
-  <p className="kicker reveal">Ficou com alguma dúvida?</p>
-  <h2 className="dn-reveal d1">Perguntas frequentes</h2>
+  <p className="kicker dn-reveal">Ficou com alguma dúvida?</p>
+  <h2 className="dn-dn-reveal d1">Perguntas frequentes</h2>
   <div className="dn-faq-list">
-    <details className="dn-reveal"><summary>Preciso agendar ou posso chegar direto?</summary><p>Trabalhamos com hora marcada para garantir seu atendimento com calma. Agende pelo WhatsApp — é só chamar no link da bio.</p></details>
-    <details className="dn-reveal d1"><summary>O pacote de Black Friday vale em qualquer unidade?</summary><p>São 6 esmaltações master por R$ 550, em até 2x sem juros, com validade de 6 meses. Confirme a unidade no momento do agendamento.</p></details>
-    <details className="dn-reveal d2"><summary>Gel ou fibra de vidro: qual escolher?</summary><p>As duas técnicas dão um acabamento natural e resistente. Na avaliação, a equipe indica a melhor opção para a sua unha.</p></details>
-    <details className="dn-reveal d3"><summary>De quanto em quanto tempo faço manutenção?</summary><p>O ideal é a cada 20 a 21 dias. Mantendo o prazo, você aproveita os valores do Renova Nita com esmaltação em gel cortesia.</p></details>
+    <details className="dn-dn-reveal"><summary>Preciso agendar ou posso chegar direto?</summary><p>Trabalhamos com hora marcada para garantir seu atendimento com calma. Agende pelo WhatsApp — é só chamar no link da bio.</p></details>
+    <details className="dn-dn-reveal d1"><summary>O pacote de Black Friday vale em qualquer unidade?</summary><p>São 6 esmaltações master por R$ 550, em até 2x sem juros, com validade de 6 meses. Confirme a unidade no momento do agendamento.</p></details>
+    <details className="dn-dn-reveal d2"><summary>Gel ou fibra de vidro: qual escolher?</summary><p>As duas técnicas dão um acabamento natural e resistente. Na avaliação, a equipe indica a melhor opção para a sua unha.</p></details>
+    <details className="dn-dn-reveal d3"><summary>De quanto em quanto tempo faço manutenção?</summary><p>O ideal é a cada 20 a 21 dias. Mantendo o prazo, você aproveita os valores do Renova Nita com esmaltação em gel cortesia.</p></details>
   </div>
 </section>
 
@@ -239,3 +287,4 @@ export function App() {
 
     </div>;
 }
+
